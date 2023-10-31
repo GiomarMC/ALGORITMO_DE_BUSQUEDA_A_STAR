@@ -114,6 +114,20 @@ def addEdges(Grafo, index, dataframe):
 
         dataframe.at[index, 'Distancia'] = distance
 
+def distancia_total(Graph, path):
+    distancia_total = 0
+
+    for i in range(len(path) - 1):
+        node1 = path[i]
+        node2 = path[i + 1]
+
+        distancia = Graph[node1][node2]['weight']
+
+        distancia_total += distancia
+
+    return distancia_total
+
+
 #DATAFRAMES UTILIZADOS PARA LA CREACION DEL GRAFO
 df_nodes = pd.read_excel("Coordenadas_Maps_UNSA.xlsx")
 df_edges = pd.read_excel("Aristas_Maps_UNSA.xlsx")
@@ -138,6 +152,7 @@ Camino_corto = a_star(Maps, Nodo_inicio, Nodo_destino)
 
 if Camino_corto:
     print("Ruta mas corta: ", Camino_corto)
+    print("La distancia total a recorrer es de: ", round(distancia_total(Maps, Camino_corto),2), "metros")
     dibujar_grafo(Maps, Camino_corto)
 else:
     print("No se encontro una ruta.")
