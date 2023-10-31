@@ -114,6 +114,7 @@ def addEdges(Grafo, index, dataframe):
 
         dataframe.at[index, 'Distancia'] = distance
 
+#Funcion para calcular la distancia total del recorrido del camino corto
 def distancia_total(Graph, path):
     distancia_total = 0
 
@@ -127,6 +128,20 @@ def distancia_total(Graph, path):
 
     return distancia_total
 
+def crear_matriz_adyacencia(Graph):
+    num_nodos = len(Graph.nodes())
+    matriz_adyacencia = [[float('inf')] * num_nodos for _ in range(num_nodos)]
+
+    for u, v, data in Graph.edges(data = True):
+        node1 = list(Graph.nodes()).index(u)
+        node2 = list(Graph.nodes()).index(v)
+        weight = data['weight']
+        matriz_adyacencia[node1][node2] = weight
+        matriz_adyacencia[node2][node1] = weight
+
+    node_labels = list(Graph.nodes())
+    df_adyacencia = pd.DataFrame(matriz_adyacencia, columns = node_labels, index = node_labels)
+    df_adyacencia.to_excel("Matriz_Adyacencia_Maps_UNSA.xlsx", index = True)
 
 #DATAFRAMES UTILIZADOS PARA LA CREACION DEL GRAFO
 df_nodes = pd.read_excel("Coordenadas_Maps_UNSA.xlsx")
@@ -141,6 +156,7 @@ addEdges(Maps, len(df_edges.index), df_edges)
 
 #SE GUARDAN LOS CAMBIOS DE LAS ARISTAS EN UN NUEVO DATAFRAME CON SUS RESPECTIVOS PESOS(DISTANCIA)
 df_edges.to_excel("Aristas_Distancias_Maps_UNSA.xlsx", index = False)
+crear_matriz_adyacencia(Maps)
 
 for node in Maps.nodes():
     print(f"Nombre del Nodo: {node}")
